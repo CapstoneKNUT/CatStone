@@ -20,7 +20,7 @@ public class SampleController {
     @GetMapping("/hello")
     public void hello(Model model) {
 
-        log.info("hello.......4..........");
+        log.info("hello.......3..........");
 
         model.addAttribute("msg", "HELLO WORLD");
     }
