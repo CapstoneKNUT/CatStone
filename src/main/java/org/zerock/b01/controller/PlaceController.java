@@ -11,63 +11,38 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.b01.dto.*;
-import org.zerock.b01.service.BoardService;
+import org.zerock.b01.dto.PlaceDTO;
+import org.zerock.b01.dto.PlaceListAllDTO;
+import org.zerock.b01.dto.PageRequestDTO;
+import org.zerock.b01.dto.PageResponseDTO;
+import org.zerock.b01.service.PlaceService;
 
 import javax.validation.Valid;
 import java.io.File;
 import java.nio.file.Files;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
-@RequestMapping("/board")
+@RequestMapping("/place")
 @Log4j2
 @RequiredArgsConstructor
-public class BoardController {
+public class PlaceController {
 
     @Value("${org.zerock.upload.path}")// import 시에 springframework으로 시작하는 Value
     private String uploadPath;
 
-    private final BoardService boardService;
-
-//    @GetMapping("/list")
-//    public void list(PageRequestDTO pageRequestDTO, Model model){
-//
-//        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-//
-//        log.info(responseDTO);
-//
-//        model.addAttribute("responseDTO", responseDTO);
-//
-//    }
-
-//    @GetMapping("/list")
-//    public void list(PageRequestDTO pageRequestDTO, Model model){
-//
-//        //PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-//
-//        PageResponseDTO<BoardListReplyCountDTO> responseDTO =
-//                boardService.listWithReplyCount(pageRequestDTO);
-//
-//        log.info(responseDTO);
-//
-//        model.addAttribute("responseDTO", responseDTO);
-//    }
-
+    private final PlaceService placeService;
 
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model){
 
-        //PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        //PageResponseDTO<PlaceDTO> responseDTO = placeService.list(pageRequestDTO);
 
-        PageResponseDTO<BoardListAllDTO> responseDTO =
-                boardService.listWithAll(pageRequestDTO);
+        PageResponseDTO<PlaceListAllDTO> responseDTO =
+                placeService.listWithAll(pageRequestDTO);
 
         log.info(responseDTO);
 
@@ -87,59 +62,46 @@ public class BoardController {
     }
 
     @PostMapping("/register")
-    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String registerPost(@Valid PlaceDTO placeDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
 
-        log.info("board POST register.......");
+        log.info("place POST register.......");
 
         if(bindingResult.hasErrors()) {
             log.info("has errors.......");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
-            return "redirect:/board/register";
+            return "redirect:/place/register";
         }
 
-        log.info(boardDTO);
+        log.info(placeDTO);
 
-        Long bno  = boardService.register(boardDTO);
+        Long bno  = placeService.register(placeDTO);
 
         redirectAttributes.addFlashAttribute("result", bno);
 
-        return "redirect:/board/list";
+        return "redirect:/place/list";
     }
-
-
-//    @GetMapping("/read")
-//    public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
-//
-//        BoardDTO boardDTO = boardService.readOne(bno);
-//
-//        log.info(boardDTO);
-//
-//        model.addAttribute("dto", boardDTO);
-//
-//    }
-
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
 
-        BoardDTO boardDTO = boardService.readOne(bno);
+        PlaceDTO placeDTO = placeService.readOne(bno);
 
-        log.info(boardDTO);
+        log.info(placeDTO);
 
-        model.addAttribute("dto", boardDTO);
+        model.addAttribute("dto", placeDTO);
 
     }
 
-    @PreAuthorize("principal.username == #boardDTO.writer")
+    @PreAuthorize("principal.username == #placeDTO.writer")
     @PostMapping("/modify")
-    public String modify( @Valid BoardDTO boardDTO,
+    public String modify( @Valid PlaceDTO placeDTO,
                           BindingResult bindingResult,
                           PageRequestDTO pageRequestDTO,
                           RedirectAttributes redirectAttributes){
 
 
-        log.info("board modify post......." + boardDTO);
+        log.info("place modify post......." + placeDTO);
 
         if(bindingResult.hasErrors()) {
             log.info("has errors.......");
@@ -148,55 +110,40 @@ public class BoardController {
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
 
-            redirectAttributes.addAttribute("bno", boardDTO.getBno());
+            redirectAttributes.addAttribute("bno", placeDTO.getBno());
 
-            return "redirect:/board/modify?"+link;
+            return "redirect:/place/modify?"+link;
         }
 
-        boardService.modify(boardDTO);
+        placeService.modify(placeDTO);
 
         redirectAttributes.addFlashAttribute("result", "modified");
 
-        redirectAttributes.addAttribute("bno", boardDTO.getBno());
+        redirectAttributes.addAttribute("bno", placeDTO.getBno());
 
-        return "redirect:/board/read";
+        return "redirect:/place/read";
     }
 
-
-//    @PostMapping("/remove")
-//    public String remove(Long bno, RedirectAttributes redirectAttributes) {
-//
-//        log.info("remove post.. " + bno);
-//
-//        boardService.remove(bno);
-//
-//        redirectAttributes.addFlashAttribute("result", "removed");
-//
-//        return "redirect:/board/list";
-//
-//    }
-
-
-    @PreAuthorize("principal.username == #boardDTO.writer")
+    @PreAuthorize("principal.username == #placeDTO.writer")
     @PostMapping("/remove")
-    public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
+    public String remove(PlaceDTO placeDTO, RedirectAttributes redirectAttributes) {
 
 
-        Long bno  = boardDTO.getBno();
+        Long bno  = placeDTO.getBno();
         log.info("remove post.. " + bno);
 
-        boardService.remove(bno);
+        placeService.remove(bno);
 
         //게시물이 삭제되었다면 첨부 파일 삭제
-        log.info(boardDTO.getFileNames());
-        List<String> fileNames = boardDTO.getFileNames();
+        log.info(placeDTO.getFileNames());
+        List<String> fileNames = placeDTO.getFileNames();
         if(fileNames != null && fileNames.size() > 0){
             removeFiles(fileNames);
         }
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
-        return "redirect:/board/list";
+        return "redirect:/place/list";
 
     }
 

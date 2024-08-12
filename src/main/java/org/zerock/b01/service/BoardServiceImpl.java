@@ -26,16 +26,6 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
 
-//    @Override
-//    public Long register(BoardDTO boardDTO) {
-//
-//        Board board = modelMapper.map(boardDTO, Board.class);
-//
-//        Long bno = boardRepository.save(board).getBno();
-//
-//        return bno;
-//    }
-
     @Override
     public Long register(BoardDTO boardDTO) {
 
@@ -45,18 +35,6 @@ public class BoardServiceImpl implements BoardService{
 
         return bno;
     }
-
-//    @Override
-//    public BoardDTO readOne(Long bno) {
-//
-//        Optional<Board> result = boardRepository.findById(bno);
-//
-//        Board board = result.orElseThrow();
-//
-//        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
-//
-//        return boardDTO;
-//    }
 
     @Override
     public BoardDTO readOne(Long bno) {
@@ -100,18 +78,6 @@ public class BoardServiceImpl implements BoardService{
         boardRepository.deleteById(bno);
 
     }
-
-//    @Override
-//    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
-//
-//        String[] types = pageRequestDTO.getTypes();
-//        String keyword = pageRequestDTO.getKeyword();
-//        Pageable pageable = pageRequestDTO.getPageable("bno");
-//
-//        Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
-//
-//        return null;
-//    }
 
     @Override
     public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {

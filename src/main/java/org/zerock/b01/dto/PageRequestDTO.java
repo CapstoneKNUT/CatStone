@@ -25,6 +25,8 @@ public class PageRequestDTO {
 
     private String type; // 검색의 종류 t,c, w, tc,tw, twc
 
+    private String local;
+
     private String keyword;
 
     public String[] getTypes(){
@@ -32,6 +34,13 @@ public class PageRequestDTO {
             return null;
         }
         return type.split("");
+    }
+
+    public String getLocal(){
+        if(local == null || local.isEmpty()){
+            return null;
+        }
+        return local;
     }
 
     public Pageable getPageable(String...props) {

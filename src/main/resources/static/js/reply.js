@@ -16,15 +16,15 @@ async function get1(bno) {
 // }
 
 
-async function getList({bno, page, size, goLast}){
+async function getList({bno, page, size, goLast, type}){
 
-    const result = await axios.get(`/replies/list/${bno}`, {params: {page, size}})
+    const result = await axios.get(`/replies/list/${bno}`, {params: {page, size, type}})
 
     if(goLast){
         const total = result.data.total
         const lastPage = parseInt(Math.ceil(total/size))
 
-        return getList({bno:bno, page:lastPage, size:size})
+        return getList({bno:bno, page:lastPage, size:size, type:type})
 
     }
 

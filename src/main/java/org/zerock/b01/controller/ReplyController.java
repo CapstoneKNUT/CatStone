@@ -28,24 +28,6 @@ public class ReplyController {
 
     private final ReplyService replyService;
 
-//    @ApiOperation(value = "Replies POST", notes = "POST 방식으로 댓글 등록")
-//    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public Map<String,Long> register(
-//            @Valid @RequestBody ReplyDTO replyDTO,
-//            BindingResult bindingResult)throws BindException{
-//
-//        log.info(replyDTO);
-//
-//        if(bindingResult.hasErrors()){
-//            throw new BindException(bindingResult);
-//        }
-//
-//        Map<String, Long> resultMap = new HashMap<>();
-//        resultMap.put("rno",111L);
-//
-//        return resultMap;
-//    }
-
     @ApiOperation(value = "Replies POST", notes = "POST 방식으로 댓글 등록")
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String,Long> register(
@@ -70,9 +52,20 @@ public class ReplyController {
     @ApiOperation(value = "Replies of Board", notes = "GET 방식으로 특정 게시물의 댓글 목록")
     @GetMapping(value = "/list/{bno}")
     public PageResponseDTO<ReplyDTO> getList(@PathVariable("bno") Long bno,
-                                             PageRequestDTO pageRequestDTO){
+                                             PageRequestDTO pageRequestDTO,
+                                             @RequestParam(name = "type", required = false, defaultValue = "board") String type) {
 
-        PageResponseDTO<ReplyDTO> responseDTO = replyService.getListOfBoard(bno, pageRequestDTO);
+        PageResponseDTO<ReplyDTO> responseDTO;
+
+        switch (type.toLowerCase()) {
+            case "place":
+                responseDTO = replyService.getListOfPlace(bno, pageRequestDTO);
+                break;
+            case "board":
+            default:
+                responseDTO = replyService.getListOfBoard(bno, pageRequestDTO);
+                break;
+        }
 
         return responseDTO;
     }

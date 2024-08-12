@@ -16,4 +16,5 @@ public interface ReplyService {
 
     PageResponseDTO<ReplyDTO> getListOfBoard(Long bno, PageRequestDTO pageRequestDTO);
 
+    PageResponseDTO<ReplyDTO> getListOfPlace(Long bno, PageRequestDTO pageRequestDTO);
 }
