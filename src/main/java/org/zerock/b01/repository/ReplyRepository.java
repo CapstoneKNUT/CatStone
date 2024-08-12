@@ -15,4 +15,5 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     Page<Reply> listOfPlace(Long bno, Pageable pageable);
 
     void deleteByBoard_Bno(Long bno);
+    void deleteByPlace_Bno(Long bno);
 }

@@ -7,15 +7,6 @@ async function get1(bno) {
     return result;
 }
 
-
-// async function getList({bno, page, size, goLast}){
-//
-//     const result = await axios.get(`/replies/list/${bno}`, {params: {page, size}})
-//
-//     return result.data
-// }
-
-
 async function getList({bno, page, size, goLast, type}){
 
     const result = await axios.get(`/replies/list/${bno}`, {params: {page, size, type}})

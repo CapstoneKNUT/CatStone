@@ -58,7 +58,6 @@ public class PageRequestDTO {
 
             builder.append("&size=" + this.size);
 
-
             if(type != null && type.length() > 0){
                 builder.append("&type=" + type);
             }
