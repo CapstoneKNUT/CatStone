@@ -39,7 +39,7 @@ public class BoardController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     @GetMapping("/register")
     public ResponseEntity<Void> registerGET() {
         return ResponseEntity.ok().build();
@@ -55,7 +55,7 @@ public class BoardController {
         return ResponseEntity.ok(Map.of("bno", bno));
     }
 
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
     public ResponseEntity<BoardDTO> read(@RequestParam Long bno, PageRequestDTO pageRequestDTO) {
 
@@ -66,7 +66,7 @@ public class BoardController {
         return ResponseEntity.ok(boardDTO);
     }
 
-    @PreAuthorize("principal.username == #boardDTO.writer")
+//    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping(value = "/modify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> modify(
             @RequestBody @Valid BoardDTO boardDTO,
@@ -79,7 +79,7 @@ public class BoardController {
         return ResponseEntity.ok(Map.of("result", "modified"));
     }
 
-    @PreAuthorize("principal.username == #boardDTO.writer")
+//    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping(value = "/remove", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> remove(@RequestBody BoardDTO boardDTO) {
 

@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import {addReply, modifyReply, getReply, removeReply} from '../../reply';
 
 const BoardRead = () => {
     const navigate = useNavigate();
@@ -147,46 +148,6 @@ const BoardRead = () => {
                 // 마지막 페이지를 요청하여 재귀 호출
                 return getList({bno: bno, page: lastPage, size: size, type: type});
             }
-            return response.data
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    };
-
-    const addReply = async (replyObj) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/replies/`,replyObj)
-            return response.data
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    };
-
-    const getReply = async (rno) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/replies/${rno}`)
-            return response.data
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    };
-
-    const modifyReply = async (replyObj) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/replies/${replyObj.rno}`, replyObj)
-            return response.data
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    };
-
-    const removeReply = async (rno) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/replies/${rno}`)
             return response.data
         } catch (error) {
             console.error(error);

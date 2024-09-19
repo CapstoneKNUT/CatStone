@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import BasicLayout from "../../layout/BasicLayout"; // Link 컴포넌트 추가
+import { useDispatch } from 'react-redux'
+import { setPageRequest, setResponseData } from "../../components/slice/store";
+
 
 function BoardList() {
     const [pageRequest, setPageRequest] = useState({
@@ -18,6 +21,7 @@ function BoardList() {
         end: 0,
         page: 1,
     });
+    const dispatch = useDispatch();
 
     useEffect(() => {
         // 데이터를 받아오는 함수
@@ -27,6 +31,8 @@ function BoardList() {
                     params: pageRequest,
                 });
                 setResponseData(response.data);
+                dispatch(setPageRequest(pageRequest));
+                dispatch(setResponseData(responseData));
             } catch (error) {
                 console.log(error);
             }
