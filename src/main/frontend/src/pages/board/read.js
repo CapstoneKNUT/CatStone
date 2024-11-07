@@ -30,7 +30,7 @@ const BoardRead = () => {
         type: '',
         keyword: '',
         link: '',
-        getLink() {
+            getLink() {
             let link = '';
 
             const { page, size, type, keyword } = this;

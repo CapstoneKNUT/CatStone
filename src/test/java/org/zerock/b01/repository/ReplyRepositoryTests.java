@@ -24,7 +24,7 @@ public class ReplyRepositoryTests {
     public void testInsert() {
 
         //실제 DB에 있는 bno
-        Long bno  = 10L;
+        Long bno  = 1L;
 
         Board board = Board.builder().bno(bno).build();
 

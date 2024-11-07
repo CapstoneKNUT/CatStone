@@ -9,7 +9,6 @@ function App() {
         <Provider store={store}>
             <RouterProvider router={root}/>
         </Provider>
-
     );
 }
 

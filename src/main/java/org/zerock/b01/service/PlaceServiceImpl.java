@@ -91,7 +91,6 @@ public class PlaceServiceImpl implements PlaceService{
         List<PlaceDTO> dtoList = result.getContent().stream()
                 .map(place -> modelMapper.map(place,PlaceDTO.class)).collect(Collectors.toList());
 
-
         return PageResponseDTO.<PlaceDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)

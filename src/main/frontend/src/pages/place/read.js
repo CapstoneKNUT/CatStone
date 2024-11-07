@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import BasicLayout from "../../layout/BasicLayout";
@@ -19,7 +19,7 @@ const PlaceRead = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:8080/api/place/${bno}`);
+                const { data } = await axios.get(`http://localhost:8080/api/place/read?bno=${bno}`);
                 setPlace(data.place);
                 setReplies(data.replies);
                 setCurrentUser(data.currentUser);
@@ -32,10 +32,10 @@ const PlaceRead = () => {
 
     const handleAddReply = async () => {
         try {
-            await axios.post('/api/reply/add', { bno, replyText, replyer: currentUser.username });
+            await axios.post('http://localhost:8080/api/replies', { bno, replyText, replyer: currentUser.username });
             setReplyText('');
             setShowRegisterModal(false);
-            const { data } = await axios.get(`http://localhost:8080/api/replies?bno=${bno}`);
+            const { data } = await axios.get(`http://localhost:8080/api/replies/${bno}`);
             setReplies(data.replies);
         } catch (error) {
             console.error('Error adding reply:', error);
@@ -44,10 +44,10 @@ const PlaceRead = () => {
 
     const handleModifyReply = async () => {
         try {
-            await axios.put('/api/reply/modify', { bno, rno: replyToModify.rno, replyText });
+            await axios.put('http://localhost:8080/api/replies/${rno}', { bno, rno: replyToModify.rno, replyText });
             setShowModifyModal(false);
-            setReplyToModify(null);
-            const { data } = await axios.get(`http://localhost:8080/api/replies?bno=${bno}`);
+            setReplyToModify();
+            const { data } = await axios.get(`http://localhost:8080/api/replies/list/${bno}`);
             setReplies(data.replies);
         } catch (error) {
             console.error('Error modifying reply:', error);
@@ -56,10 +56,9 @@ const PlaceRead = () => {
 
     const handleRemoveReply = async () => {
         try {
-            await axios.delete(`/api/reply/remove`, { data: { bno, rno: replyToModify.rno } });
             setShowModifyModal(false);
             setReplyToModify(null);
-            const { data } = await axios.get(`http://localhost:8080/api/replies?bno=${bno}`);
+            const { data } = await axios.get(`http://localhost:8080/api/replies/list/${bno}`);
             setReplies(data.replies);
         } catch (error) {
             console.error('Error removing reply:', error);
